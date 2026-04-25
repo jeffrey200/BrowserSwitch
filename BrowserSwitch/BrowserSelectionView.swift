@@ -47,6 +47,13 @@ struct BrowserSelectionView: View {
                         option: option,
                         isSelected: option.browser == selectedBrowser
                     )
+                    .onHover { isHovering in
+                        guard isHovering, option.isInstalled else {
+                            return
+                        }
+
+                        selectedBrowser = option.browser
+                    }
                     .onTapGesture {
                         choose(option)
                     }

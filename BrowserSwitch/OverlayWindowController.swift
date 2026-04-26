@@ -12,6 +12,7 @@ final class OverlayWindowController {
 
     func show(url: URL, router: BrowserRouter) {
         let options = Browser.options()
+        let panelSize = BrowserSelectionView.panelSize(for: options.count)
         let initialSelection = initialSelection(from: options)
 
         let view = BrowserSelectionView(
@@ -29,9 +30,9 @@ final class OverlayWindowController {
         )
 
         let hostingController = NSHostingController(rootView: view)
-        let panel = makePanel()
+        let panel = makePanel(size: panelSize)
         panel.contentViewController = hostingController
-        panel.setFrame(centeredFrame(for: BrowserSelectionView.panelSize), display: true)
+        panel.setFrame(centeredFrame(for: panelSize), display: true)
 
         self.panel?.close()
         self.panel = panel
@@ -48,9 +49,9 @@ final class OverlayWindowController {
         panel = nil
     }
 
-    private func makePanel() -> OverlayPanel {
+    private func makePanel(size: NSSize) -> OverlayPanel {
         let panel = OverlayPanel(
-            contentRect: NSRect(origin: .zero, size: BrowserSelectionView.panelSize),
+            contentRect: NSRect(origin: .zero, size: size),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false

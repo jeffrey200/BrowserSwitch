@@ -15,7 +15,22 @@ struct BrowserSelectionView: View {
         static let escape: UInt16 = 53
     }
 
-    static let panelSize = NSSize(width: 430, height: 172)
+    private enum Layout {
+        static let horizontalPadding: CGFloat = 24
+        static let verticalPadding: CGFloat = 22
+        static let tileSpacing: CGFloat = 14
+        static let tileWidth: CGFloat = 112
+        static let panelHeight: CGFloat = 172
+    }
+
+    static func panelSize(for optionCount: Int) -> NSSize {
+        let browserCount = max(optionCount, 1)
+        let width = (Layout.horizontalPadding * 2)
+            + (CGFloat(browserCount) * Layout.tileWidth)
+            + (CGFloat(browserCount - 1) * Layout.tileSpacing)
+
+        return NSSize(width: width, height: Layout.panelHeight)
+    }
 
     let options: [BrowserOption]
     let onChoose: (Browser) -> Void
@@ -69,10 +84,10 @@ struct BrowserSelectionView: View {
                     }
                 }
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 22)
+            .padding(.horizontal, Layout.horizontalPadding)
+            .padding(.vertical, Layout.verticalPadding)
         }
-        .frame(width: Self.panelSize.width, height: Self.panelSize.height)
+        .frame(width: panelSize.width, height: panelSize.height)
     }
 
     private func handleKeyDown(_ event: NSEvent) -> Bool {
@@ -138,6 +153,10 @@ struct BrowserSelectionView: View {
         options
             .filter(\.isInstalled)
             .map(\.browser)
+    }
+
+    private var panelSize: NSSize {
+        Self.panelSize(for: options.count)
     }
 }
 

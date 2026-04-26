@@ -9,6 +9,7 @@ import UniformTypeIdentifiers
 enum Browser: String, CaseIterable, Identifiable {
     case chrome
     case firefox
+    case firefoxDeveloperEdition
     case safari
 
     var id: String {
@@ -21,6 +22,8 @@ enum Browser: String, CaseIterable, Identifiable {
             "Google Chrome"
         case .firefox:
             "Firefox"
+        case .firefoxDeveloperEdition:
+            "Firefox Dev"
         case .safari:
             "Safari"
         }
@@ -32,6 +35,8 @@ enum Browser: String, CaseIterable, Identifiable {
             "com.google.Chrome"
         case .firefox:
             "org.mozilla.firefox"
+        case .firefoxDeveloperEdition:
+            "org.mozilla.firefoxdeveloperedition"
         case .safari:
             "com.apple.Safari"
         }

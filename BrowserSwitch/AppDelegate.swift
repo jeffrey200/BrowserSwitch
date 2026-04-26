@@ -8,6 +8,7 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let overlayWindowController = OverlayWindowController()
     private let browserRouter = BrowserRouter()
+    private var statusBarController: StatusBarController?
     private var didFinishLaunching = false
     private var pendingURL: URL?
 
@@ -28,6 +29,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Keep BrowserSwitch out of the Dock while still letting macOS treat it as a normal app bundle.
         NSApp.setActivationPolicy(.accessory)
         didFinishLaunching = true
+        statusBarController = StatusBarController(
+            onTestOverlay: { [weak self] in
+                self?.handle(urlString: "https://example.com")
+            },
+            onSetDefaultBrowser: { [weak self] in
+                self?.setAsDefaultBrowser(terminateWhenDone: false)
+            }
+        )
 
         setAsDefaultBrowserIfRequested()
         showDebugURLIfRequested()
@@ -95,6 +104,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
+        setAsDefaultBrowser(terminateWhenDone: true)
+    }
+
+    private func setAsDefaultBrowser(terminateWhenDone: Bool) {
         let applicationURL = Bundle.main.bundleURL
         let group = DispatchGroup()
 
@@ -112,7 +125,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         group.notify(queue: .main) {
-            NSApp.terminate(nil)
+            if terminateWhenDone {
+                NSApp.terminate(nil)
+            }
         }
     }
 

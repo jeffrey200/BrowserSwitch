@@ -26,8 +26,9 @@ final class OverlayWindowController {
             initialSelection: initialSelection,
             onChoose: { [weak self] browser in
                 self?.preferenceStore.saveLastUsedBrowser(browser)
-                router.open(url, in: browser)
-                self?.close()
+                router.open(url, in: browser) {
+                    self?.close()
+                }
             },
             onCancel: { [weak self] in
                 self?.close()

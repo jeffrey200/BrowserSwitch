@@ -16,10 +16,7 @@ final class OverlayWindowController {
 
     func show(url: URL, router: BrowserRouter) {
         let options = Browser.options()
-        guard let initialSelection = initialSelection(from: options) else {
-            NSSound.beep()
-            return
-        }
+        let initialSelection = initialSelection(from: options)
 
         let view = BrowserSelectionView(
             options: options,
@@ -44,8 +41,10 @@ final class OverlayWindowController {
         self.panel = panel
 
         NSApp.activate(ignoringOtherApps: true)
+        NSRunningApplication.current.activate(options: [.activateAllWindows])
         panel.makeKeyAndOrderFront(nil)
         panel.orderFrontRegardless()
+        panel.makeMain()
     }
 
     private func close() {
@@ -56,7 +55,7 @@ final class OverlayWindowController {
     private func makePanel() -> OverlayPanel {
         let panel = OverlayPanel(
             contentRect: NSRect(origin: .zero, size: Layout.panelSize),
-            styleMask: [.borderless],
+            styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -64,11 +63,14 @@ final class OverlayWindowController {
         panel.backgroundColor = .clear
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient]
         panel.hasShadow = true
+        panel.hidesOnDeactivate = false
+        panel.isFloatingPanel = true
         panel.isMovableByWindowBackground = false
         panel.isOpaque = false
         panel.isReleasedWhenClosed = false
-        panel.level = .modalPanel
+        panel.level = .popUpMenu
         panel.titleVisibility = .hidden
+        panel.worksWhenModal = true
 
         return panel
     }
@@ -88,7 +90,7 @@ final class OverlayWindowController {
         return NSRect(origin: origin, size: size)
     }
 
-    private func initialSelection(from options: [BrowserOption]) -> Browser? {
+    private func initialSelection(from options: [BrowserOption]) -> Browser {
         if
             let lastUsedBrowser = preferenceStore.lastUsedBrowser,
             options.contains(where: { $0.browser == lastUsedBrowser && $0.isInstalled })
@@ -100,7 +102,7 @@ final class OverlayWindowController {
             return .safari
         }
 
-        return options.first(where: \.isInstalled)?.browser
+        return options.first(where: \.isInstalled)?.browser ?? .safari
     }
 }
 

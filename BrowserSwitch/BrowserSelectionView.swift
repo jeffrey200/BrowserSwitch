@@ -7,6 +7,16 @@ import AppKit
 import SwiftUI
 
 struct BrowserSelectionView: View {
+    private enum KeyCode {
+        static let leftArrow: UInt16 = 123
+        static let rightArrow: UInt16 = 124
+        static let returnKey: UInt16 = 36
+        static let keypadEnter: UInt16 = 76
+        static let escape: UInt16 = 53
+    }
+
+    static let panelSize = NSSize(width: 430, height: 172)
+
     let options: [BrowserOption]
     let onChoose: (Browser) -> Void
     let onCancel: () -> Void
@@ -62,21 +72,21 @@ struct BrowserSelectionView: View {
             .padding(.horizontal, 24)
             .padding(.vertical, 22)
         }
-        .frame(width: 430, height: 172)
+        .frame(width: Self.panelSize.width, height: Self.panelSize.height)
     }
 
     private func handleKeyDown(_ event: NSEvent) -> Bool {
         switch event.keyCode {
-        case 123:
+        case KeyCode.leftArrow:
             moveSelection(by: -1)
             return true
-        case 124:
+        case KeyCode.rightArrow:
             moveSelection(by: 1)
             return true
-        case 36, 76:
+        case KeyCode.returnKey, KeyCode.keypadEnter:
             chooseSelectedBrowser()
             return true
-        case 53:
+        case KeyCode.escape:
             onCancel()
             return true
         default:
@@ -98,10 +108,6 @@ struct BrowserSelectionView: View {
     }
 
     private func moveSelection(by offset: Int) {
-        let installedBrowsers = options
-            .filter(\.isInstalled)
-            .map(\.browser)
-
         guard !installedBrowsers.isEmpty else {
             return
         }
@@ -126,6 +132,12 @@ struct BrowserSelectionView: View {
         }
 
         onChoose(option.browser)
+    }
+
+    private var installedBrowsers: [Browser] {
+        options
+            .filter(\.isInstalled)
+            .map(\.browser)
     }
 }
 

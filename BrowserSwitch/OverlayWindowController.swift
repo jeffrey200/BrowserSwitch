@@ -7,10 +7,6 @@ import AppKit
 import SwiftUI
 
 final class OverlayWindowController {
-    private enum Layout {
-        static let panelSize = NSSize(width: 430, height: 172)
-    }
-
     private let preferenceStore = BrowserPreferenceStore()
     private var panel: OverlayPanel?
 
@@ -35,7 +31,7 @@ final class OverlayWindowController {
         let hostingController = NSHostingController(rootView: view)
         let panel = makePanel()
         panel.contentViewController = hostingController
-        panel.setFrame(centeredFrame(for: Layout.panelSize), display: true)
+        panel.setFrame(centeredFrame(for: BrowserSelectionView.panelSize), display: true)
 
         self.panel?.close()
         self.panel = panel
@@ -54,7 +50,7 @@ final class OverlayWindowController {
 
     private func makePanel() -> OverlayPanel {
         let panel = OverlayPanel(
-            contentRect: NSRect(origin: .zero, size: Layout.panelSize),
+            contentRect: NSRect(origin: .zero, size: BrowserSelectionView.panelSize),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -91,18 +87,22 @@ final class OverlayWindowController {
     }
 
     private func initialSelection(from options: [BrowserOption]) -> Browser {
+        let installedBrowsers = options
+            .filter(\.isInstalled)
+            .map(\.browser)
+
         if
             let lastUsedBrowser = preferenceStore.lastUsedBrowser,
-            options.contains(where: { $0.browser == lastUsedBrowser && $0.isInstalled })
+            installedBrowsers.contains(lastUsedBrowser)
         {
             return lastUsedBrowser
         }
 
-        if options.contains(where: { $0.browser == .safari && $0.isInstalled }) {
+        if installedBrowsers.contains(.safari) {
             return .safari
         }
 
-        return options.first(where: \.isInstalled)?.browser ?? .safari
+        return installedBrowsers.first ?? .safari
     }
 }
 

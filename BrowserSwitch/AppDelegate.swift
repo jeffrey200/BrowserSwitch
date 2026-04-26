@@ -6,6 +6,17 @@
 import AppKit
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    private enum LaunchArgument {
+        static let debugURL = "--debug-url"
+        static let setDefaultBrowser = "--set-default-browser"
+    }
+
+    private enum Timing {
+        static let overlayPresentationDelay: TimeInterval = 0.1
+    }
+
+    fileprivate static let supportedSchemes = ["http", "https"]
+
     private let overlayWindowController = OverlayWindowController()
     private let browserRouter = BrowserRouter()
     private var statusBarController: StatusBarController?
@@ -88,7 +99,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func showDebugURLIfRequested() {
         let arguments = ProcessInfo.processInfo.arguments
         guard
-            let debugURLIndex = arguments.firstIndex(of: "--debug-url"),
+            let debugURLIndex = arguments.firstIndex(of: LaunchArgument.debugURL),
             arguments.indices.contains(debugURLIndex + 1)
         else {
             return
@@ -100,7 +111,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setAsDefaultBrowserIfRequested() {
-        guard ProcessInfo.processInfo.arguments.contains("--set-default-browser") else {
+        guard ProcessInfo.processInfo.arguments.contains(LaunchArgument.setDefaultBrowser) else {
             return
         }
 
@@ -111,7 +122,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let applicationURL = Bundle.main.bundleURL
         let group = DispatchGroup()
 
-        for scheme in ["http", "https"] {
+        for scheme in Self.supportedSchemes {
             group.enter()
             NSWorkspace.shared.setDefaultApplication(
                 at: applicationURL,
@@ -149,7 +160,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + Timing.overlayPresentationDelay) { [weak self] in
             guard let self else {
                 return
             }
@@ -174,6 +185,6 @@ private extension URL {
             return false
         }
 
-        return scheme == "http" || scheme == "https"
+        return AppDelegate.supportedSchemes.contains(scheme)
     }
 }

@@ -42,7 +42,7 @@ The script builds a Release configuration and installs the app to `~/Application
 ### Set as default browser
 
 1. Open BrowserSwitch from `~/Applications`
-2. Click the globe icon in the menu bar
+2. Click the BrowserSwitch icon in the menu bar
 3. Choose **Set as Default Browser**
 4. Confirm the system prompt
 

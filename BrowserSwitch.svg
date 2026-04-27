@@ -1,0 +1,75 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+
+    <filter id="windowShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14"/>
+      <feOffset dx="0" dy="12" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.35"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <clipPath id="squircle">
+      <path d="M 512 0
+               C 158 0 0 158 0 512
+               C 0 866 158 1024 512 1024
+               C 866 1024 1024 866 1024 512
+               C 1024 158 866 0 512 0 Z"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#squircle)">
+    <!-- Purple gradient background -->
+    <rect width="1024" height="1024" fill="url(#bg)"/>
+
+    <!-- Browser window -->
+    <g filter="url(#windowShadow)">
+      <!-- Window body -->
+      <rect x="200" y="240" width="624" height="544" rx="56" ry="56" fill="#FAFBFC"/>
+
+      <!-- Title bar -->
+      <path d="M 200 296
+               Q 200 240 256 240
+               L 768 240
+               Q 824 240 824 296
+               L 824 350
+               L 200 350 Z" fill="#F1F5F9"/>
+
+      <!-- Traffic lights -->
+      <circle cx="256" cy="295" r="14" fill="#EF4444"/>
+      <circle cx="304" cy="295" r="14" fill="#F59E0B"/>
+      <circle cx="352" cy="295" r="14" fill="#10B981"/>
+
+      <!-- Vertical split line (dashed, down the middle) -->
+      <line x1="512" y1="370" x2="512" y2="784" stroke="#CBD5E1" stroke-width="6" stroke-dasharray="12 12"/>
+
+      <!-- LEFT SIDE: Globe -->
+      <g transform="translate(356, 567)">
+        <circle cx="0" cy="0" r="88" fill="none" stroke="#667eea" stroke-width="10"/>
+        <ellipse cx="0" cy="0" rx="40" ry="88" fill="none" stroke="#667eea" stroke-width="10"/>
+        <line x1="-88" y1="0" x2="88" y2="0" stroke="#667eea" stroke-width="10"/>
+      </g>
+
+      <!-- RIGHT SIDE: Two arrows -->
+      <!-- Top arrow -->
+      <g stroke="#764ba2" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <line x1="596" y1="510" x2="736" y2="510"/>
+        <polyline points="704,478 736,510 704,542"/>
+      </g>
+
+      <!-- Bottom arrow -->
+      <g stroke="#764ba2" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <line x1="596" y1="624" x2="736" y2="624"/>
+        <polyline points="704,592 736,624 704,656"/>
+      </g>
+    </g>
+  </g>
+</svg>

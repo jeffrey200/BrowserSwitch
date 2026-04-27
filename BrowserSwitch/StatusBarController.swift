@@ -25,8 +25,10 @@ final class StatusBarController: NSObject {
 
     private func configureStatusItem() {
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "globe", accessibilityDescription: "BrowserSwitch")
-            button.image?.isTemplate = true
+            let icon = NSApp.applicationIconImage.copy() as? NSImage
+            icon?.size = NSSize(width: 18, height: 18)
+            icon?.isTemplate = false
+            button.image = icon ?? NSImage(systemSymbolName: "globe", accessibilityDescription: "BrowserSwitch")
             button.toolTip = "BrowserSwitch"
         }
 

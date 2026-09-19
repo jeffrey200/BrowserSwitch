@@ -8,8 +8,8 @@ import UniformTypeIdentifiers
 
 enum Browser: String, CaseIterable, Identifiable {
     case chrome
-    case firefox
     case firefoxDeveloperEdition
+    case firefox
     case safari
 
     var id: String {

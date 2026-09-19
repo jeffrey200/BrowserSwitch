@@ -79,3 +79,11 @@ open -a BrowserSwitch --args --debug-url "https://github.com"
 ## Privacy
 
 BrowserSwitch makes no network requests, collects no telemetry, and stores only the bundle identifier of your last-used browser in `UserDefaults`. URLs are passed directly to the browser you choose and never logged or persisted.
+
+## License
+
+Copyright (C) 2026 Jeffrey
+
+BrowserSwitch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+See [LICENSE](LICENSE) for details.
